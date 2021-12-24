@@ -22,7 +22,7 @@ fileprivate struct MainCircleLoading: View {
     }
 }
 
-fileprivate struct CircleLoadingView_Previews: PreviewProvider {
+struct CircleLoadingView_Previews: PreviewProvider {
     static var previews: some View {
         MainCircleLoading(startAnimation: .constant(true), scaleEffect: .constant(true))
     }
