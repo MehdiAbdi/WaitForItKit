@@ -10,6 +10,7 @@ import SwiftUI
 public struct AlertNotificationView: View {
     @Binding var imageAnimation: Bool
     @Binding var alertAnimation: Bool
+    @Binding var title: String
     
     @State private var hideNotification = false
     private var deviceH = UIScreen.main.bounds.height / 2.2
@@ -18,14 +19,17 @@ public struct AlertNotificationView: View {
     var width: CGFloat
     var height: CGFloat
     var notificationBGColor: UIColor
+    var fontSize: CGFloat
     
     
-    public init(alertAnimation: Binding<Bool>, imageAnimation: Binding<Bool>,
+    public init(title: Binding<String>, alertAnimation: Binding<Bool>, imageAnimation: Binding<Bool>, fontSize: CGFloat,
                 imageColor: Color = .gray, width: CGFloat = 220, height: CGFloat = 50,
                 notificationBGColor: UIColor = .notificationBGColor) {
         
+        self._title = title
         self._alertAnimation = alertAnimation
         self._imageAnimation = imageAnimation
+        self.fontSize = fontSize
         self.imageColor = imageColor
         self.width = width
         self.height = height
@@ -70,8 +74,8 @@ public struct AlertNotificationView: View {
                 }
                 
                 Spacer()
-                Text("Hi")
-                    .font(.system(size: 20, weight: .bold, design: .rounded))
+                Text(title)
+                    .font(.system(size: fontSize, weight: .bold, design: .rounded))
                     .foregroundColor(.gray)
                     .padding(.leading, -26)
                 
@@ -88,7 +92,8 @@ public struct AlertNotificationView: View {
 
 struct AlertNotificationView_Previews: PreviewProvider {
     static var previews: some View {
-        AlertNotificationView(alertAnimation: .constant(false), imageAnimation: .constant(false), imageColor: .gray, width: 220, height: 50, notificationBGColor: .notificationBGColor)
+        AlertNotificationView(title: .constant("Warning"), alertAnimation: .constant(false), imageAnimation: .constant(false), fontSize: 20,
+                              imageColor: .gray, width: 220, height: 50, notificationBGColor: .notificationBGColor)
             .preferredColorScheme(.dark)
     }
 }
