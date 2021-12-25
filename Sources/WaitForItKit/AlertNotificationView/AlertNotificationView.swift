@@ -22,7 +22,7 @@ public struct AlertNotificationView: View {
     var fontSize: CGFloat
     
     
-    public init(title: Binding<String>, alertAnimation: Binding<Bool>, imageAnimation: Binding<Bool>, fontSize: CGFloat,
+    public init(title: Binding<String>, alertAnimation: Binding<Bool>, imageAnimation: Binding<Bool>, fontSize: CGFloat = 15,
                 imageColor: Color = .gray, width: CGFloat = 220, height: CGFloat = 50,
                 notificationBGColor: UIColor = .notificationBGColor) {
         
@@ -64,7 +64,8 @@ public struct AlertNotificationView: View {
         ZStack {
             Rectangle()
                 .cornerRadius(25)
-                .foregroundColor(Color(uiColor: notificationBGColor))
+                .foregroundColor(Color(UIColor.init(named: "NotificationColorSystemAppearence",
+                                                    in: .module, compatibleWith: nil)!))
             
             HStack(alignment: .center) {
                 ZStack {
@@ -74,10 +75,15 @@ public struct AlertNotificationView: View {
                 }
                 
                 Spacer()
-                Text(title)
-                    .font(.system(size: fontSize, weight: .bold, design: .rounded))
-                    .foregroundColor(.gray)
+                HStack {
+                    Text(title)
+                        .multilineTextAlignment(.center)
+                        .font(.system(size: fontSize, weight: .bold, design: .rounded))
+                        .foregroundColor(.gray)
                     .padding(.leading, -26)
+                }
+                .padding()
+                .padding(.leading, 7)
                 
                 Spacer()
             }.padding(.leading, 10)
@@ -92,7 +98,7 @@ public struct AlertNotificationView: View {
 
 struct AlertNotificationView_Previews: PreviewProvider {
     static var previews: some View {
-        AlertNotificationView(title: .constant("Warning"), alertAnimation: .constant(false), imageAnimation: .constant(false), fontSize: 20,
+        AlertNotificationView(title: .constant("Something went wrong"), alertAnimation: .constant(false), imageAnimation: .constant(false), fontSize: 15,
                               imageColor: .gray, width: 220, height: 50, notificationBGColor: .notificationBGColor)
             .preferredColorScheme(.dark)
     }

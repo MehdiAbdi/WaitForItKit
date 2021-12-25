@@ -10,36 +10,32 @@ import UIKit
 
 public struct CircleLoadingAnimation: View {
     public init(isAnimated: Binding<Bool>, scaleEffect: Binding<Bool>,
-                stroke: Binding<CGFloat>, width: Binding<CGFloat>, height: Binding<CGFloat>,
-                gradientColorStart: Binding<Color>, gradientColorEnd: Binding<Color>, bgGradientStart: Binding<Color>,
-                bgGradientEnd: Binding<Color>, animationDuration: Binding<Double>) {
+                stroke: CGFloat = 10, width: CGFloat = 60, height: CGFloat = 60,
+                gradientColorStart: Binding<Color>, gradientColorEnd: Binding<Color>, bgGradient: Color, animationDuration: Double = 1) {
         
+        self.width = width
+        self.height = height
+        self.stroke = stroke
+        self.animationDuration = animationDuration
+        self.bgColor = bgGradient
         self._isAnimated = isAnimated
         self._scaleEffect = scaleEffect
-        
-        self._stroke = stroke
-        self._width = width
-        self._height = height
         self._circleGradientStart = gradientColorStart
         self._circleGradientEnd = gradientColorEnd
-        self._bgGradientStart = bgGradientStart
-        self._bgGradientEnd = bgGradientEnd
-        self._animationDuration = animationDuration
     }
     
-    @Binding var stroke: CGFloat
-    @Binding var width: CGFloat
-    @Binding var height: CGFloat
+    var width: CGFloat
+    var height: CGFloat
+    var stroke: CGFloat
+    var animationDuration: Double
+    var bgColor: Color
     @Binding var circleGradientStart: Color
     @Binding var circleGradientEnd: Color
-    @Binding var bgGradientStart: Color
-    @Binding var bgGradientEnd: Color
-    @Binding var animationDuration: Double
     @Binding var isAnimated: Bool
     @Binding var scaleEffect: Bool
     
-    let deviceW = UIScreen.main.bounds.width
-    let deviceH = UIScreen.main.bounds.height
+    private let deviceW = UIScreen.main.bounds.width
+    private let deviceH = UIScreen.main.bounds.height
     
     public var body: some View {
         ZStack {
@@ -52,11 +48,15 @@ public struct CircleLoadingAnimation: View {
                     .scaleEffect(scaleEffect ? 1.5 : 1)
                     .animation(.easeInOut(duration: animationDuration).repeatForever(autoreverses: true), value: isAnimated)
             }
-        }.background {
-            LinearGradient(colors: [bgGradientStart, bgGradientEnd], startPoint: .top, endPoint: .bottom)
-                .ignoresSafeArea(.all)
-                .frame(width: deviceW, height: deviceH)
-                .blur(radius: 200)
         }
+        .background(
+            ZStack {
+                LinearGradient(colors: [bgColor, bgColor], startPoint: .top, endPoint: .bottom)
+                    .ignoresSafeArea(.all)
+                    .frame(width: deviceW, height: deviceH)
+                    .blur(radius: 220)
+                
+            }
+        )
     }
 }
