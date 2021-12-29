@@ -21,10 +21,10 @@ public struct AlertNotificationView: View {
     var height: CGFloat
     var notificationBGColor: UIColor
     var fontSize: CGFloat
-    
+    var alertSystemImage: String?
     
     public init(title: Binding<String>, alertAnimation: Binding<Bool>, imageAnimation: Binding<Bool>,
-                slideAnimation: Binding<Bool>, fontSize: CGFloat = 15,
+                slideAnimation: Binding<Bool>, alertSystemImage: String?, fontSize: CGFloat = 15,
                 imageColor: Color = .gray, width: CGFloat = 220, height: CGFloat = 50,
                 notificationBGColor: UIColor = .notificationBGColor) {
         
@@ -32,6 +32,7 @@ public struct AlertNotificationView: View {
         self._alertAnimation = alertAnimation
         self._imageAnimation = imageAnimation
         self._slideAnimation = slideAnimation
+        self.alertSystemImage = alertSystemImage
         self.fontSize = fontSize
         self.imageColor = imageColor
         self.width = width
@@ -57,47 +58,49 @@ public struct AlertNotificationView: View {
     }
     
     public var body: some View {
-            ZStack {
-                withAnimation {
+        ZStack {
+            withAnimation {
+                
+                ZStack {
+                    Rectangle()
+                        .cornerRadius(25)
+                        .foregroundColor(Color(UIColor.init(named: "NotificationColorSystemAppearence",
+                                                            in: .module, compatibleWith: nil)!))
                     
-                    ZStack {
-                        Rectangle()
-                            .cornerRadius(25)
-                            .foregroundColor(Color(UIColor.init(named: "NotificationColorSystemAppearence",
-                                                                in: .module, compatibleWith: nil)!))
-                        
-                        HStack(alignment: .center) {
-                            ZStack {
+                    HStack(alignment: .center) {
+                        ZStack {
+                            if alertSystemImage != nil {
                                 withAnimation {
                                     alertImage()
                                 }
                             }
-                            
-                            Spacer()
-                            HStack {
-                                Text(title)
-                                    .fixedSize()
-                                    .lineLimit(2)
-                                    .multilineTextAlignment(.center)
-                                    .font(.system(size: fontSize, weight: .bold, design: .rounded))
-                                    .foregroundColor(.gray)
-                                    .padding(.leading, -26)
-                            }
-                            .padding()
-                            .padding(.leading, 7)
-                            Spacer()
-                        }.padding(.leading, 10)
+                        }
                         
-                    }
-                    .frame(width: width, height: height, alignment: .center)
-                    .offset(x: 0, y: slideAnimation ? (-deviceH / 2.2) + 40  : -deviceH / 1.5)
-                    .opacity(hideNotification ? 0 : 1)
-                    .animation(.easeInOut(duration: 0.7), value: alertAnimation)
+                        Spacer()
+                        HStack {
+                            Text(title)
+                                .fixedSize()
+                                .lineLimit(2)
+                                .multilineTextAlignment(.center)
+                                .font(.system(size: fontSize, weight: .bold, design: .rounded))
+                                .foregroundColor(.gray)
+                                .padding(.leading, -26)
+                        }
+                        .padding()
+                        .padding(.leading, 7)
+                        Spacer()
+                    }.padding(.leading, 10)
+                    
                 }
-
-            }.onChange(of: slideAnimation) { newValue in
-                asyncAnimationToggle()
+                .frame(width: width, height: height, alignment: .center)
+                .offset(x: 0, y: slideAnimation ? (-deviceH / 2.2) + 40  : -deviceH / 1.5)
+                .opacity(hideNotification ? 0 : 1)
+                .animation(.easeInOut(duration: 0.7), value: alertAnimation)
             }
+            
+        }.onChange(of: slideAnimation) { newValue in
+            asyncAnimationToggle()
+        }
     }
 }
 
@@ -105,7 +108,7 @@ public struct AlertNotificationView: View {
 struct AlertNotificationView_Previews: PreviewProvider {
     static var previews: some View {
         AlertNotificationView(title: .constant("Something went wrong"), alertAnimation: .constant(false),
-                              imageAnimation: .constant(false), slideAnimation: .constant(false), fontSize: 15,
+                              imageAnimation: .constant(false), slideAnimation: .constant(false), alertSystemImage: "xmark.circle.fill", fontSize: 15,
                               imageColor: .gray, width: 220, height: 50, notificationBGColor: .notificationBGColor)
             .preferredColorScheme(.dark)
     }
