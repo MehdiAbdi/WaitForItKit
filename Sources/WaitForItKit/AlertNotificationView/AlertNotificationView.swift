@@ -13,7 +13,6 @@ public struct AlertNotificationView: View {
     @Binding var slideAnimation: Bool
     @Binding var title: String
     
-    @State private var hideNotification = false
     private var deviceH = UIScreen.main.bounds.height
     
     var imageColor: Color
@@ -41,7 +40,8 @@ public struct AlertNotificationView: View {
     }
     
     private func alertImage() -> some View {
-        return Image(systemName: "xmark.circle.fill")
+        
+        return Image(systemName: alertSystemImage ?? "")
             .foregroundColor(imageColor)
             .font(.system(size: 25))
             .scaleEffect(imageAnimation ? 1.3 : 0.8)
@@ -53,7 +53,6 @@ public struct AlertNotificationView: View {
             self.slideAnimation = false
             self.imageAnimation = false
             self.alertAnimation = false
-            self.hideNotification.toggle()
         }
     }
     
@@ -94,7 +93,6 @@ public struct AlertNotificationView: View {
                 }
                 .frame(width: width, height: height, alignment: .center)
                 .offset(x: 0, y: slideAnimation ? (-deviceH / 2.2) + 40  : -deviceH / 1.5)
-                .opacity(hideNotification ? 0 : 1)
                 .animation(.easeInOut(duration: 0.7), value: alertAnimation)
             }
             
